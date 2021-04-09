@@ -5,15 +5,10 @@ library(dplyr)
 
 ######### CARREGANDO OS DADOS ###############
 setwd("C:/Users/Flávio/Desktop/Analise_Dados/Rstudio/Enade")
-BRUTO <- read.table("microdados_enade_2019.txt", head=T, sep=";",dec=",")
+enade <- read.csv("enade.csv", head=T, sep=",",dec=".")
 ##Visualizando as 5 primeiras linhas do banco de dados
-head(BRUTO)
+head(enade)
 
-######### SELECIONANDO AS VARIÁVEIS QUE VOU UTILIZAR ###############
-enade = BRUTO %>% select(CO_UF_CURSO,NU_IDADE,TP_PRES,CO_MODALIDADE,
-                         NT_GER,QE_I17,QE_I21,NU_IDADE)
-
-write.csv(enade, "enade.csv", row.names = FALSE)
 ######### DESCRIÇÃO DAS VARIÁVEIS ###############
 #CO_UF_CURSO - Código da UF de funcionamento do curso
 #NU_IDADE - Idade do inscrito em 24/11/2019
@@ -38,7 +33,7 @@ enade = enade %>% filter (QE_I17 %in% c("A","B","D","E"))
 #Banco de dados com duas colunas: código da UF e  UF
 UF <- read.table("UF.txt", head=T, sep=";")
 #Criando uma coluna para UF
-dim(enade)
+
 enade=merge(enade,UF)
 
 # Quantos candidatos por estados fizeram o Enade 2019?
@@ -69,10 +64,10 @@ round(mean(enade$NU_IDADE),2)
 enade %>% group_by(NU_IDADE) %>% summarise("Freq"=n()) %>% arrange(desc(Freq))
 #23 anos é idade mais frequente dos alunos que fizeram a prova do Enade
 #Histograma da distribuição de idade
-enade %>% ggplot(aes(x=NU_IDADE)) +  geom_histogram(aes(y=..density..), binwidth = 5,color = "black",fill="lightblue",alpha=.4) +
+enade %>% ggplot(aes(x=NU_IDADE)) +  geom_histogram(aes(y=..count..), binwidth = 5,color = "black",fill="lightblue",alpha=.4) +
   labs(title = "Distribuição das idades",
        x = "Idades dos Alunos",
-       y = "Densidade") 
+       y = "Total de alunos") 
 #Menor nota
 min(enade$NT_GER)
 #Maior nota
